@@ -1,19 +1,26 @@
 module("traversing", { teardown: moduleTeardown });
 
 test( "find(String)", function() {
-	expect( 7 );
+	expect( 9 );
 	equal( "Yahoo", jQuery("#foo").find(".blogTest").text(), "Check for find" );
 
 	// using contents will get comments regular, text, and comment nodes
 	var j = jQuery("#nonnodes").contents();
 	equal( j.find("div").length, 0, "Check node,textnode,comment to find zero divs" );
 	equal( j.find("div").andSelf().length, 3, "Check node,textnode,comment to find zero divs, but preserves pushStack" );
-
 	deepEqual( jQuery("#qunit-fixture").find("> div").get(), q( "foo", "nothiddendiv", "moretests", "tabindex-tests", "liveHandlerOrder", "siblingTest", "fx-test-group" ), "find child elements" );
 	deepEqual( jQuery("#qunit-fixture").find("> #foo, > #moretests").get(), q( "foo", "moretests" ), "find child elements" );
 	deepEqual( jQuery("#qunit-fixture").find("> #foo > p").get(), q( "sndp", "en", "sap" ), "find child elements" );
 
 	deepEqual( jQuery("#siblingTest, #siblingfirst").find("+ *").get(), q( "siblingnext", "fx-test-group" ), "ensure document order" );
+
+	var $hidden = jQuery(":hidden");
+	var numHiddens = $hidden.length;
+	var html = jQuery("<br/>").appendTo( "body" );
+	equal($hidden.length, numHiddens, "Find hidden elements");
+	equal(jQuery(":hidden").length, numHiddens, "<br/> should not change number of hiddens");
+
+	html.remove();
 });
 
 test( "find(node|jQuery object)", function() {
